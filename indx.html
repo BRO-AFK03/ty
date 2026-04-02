@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🐕‍🦺 ПАСПОРТ СЛУЖЕБНОЙ СОБАКИ - Тұйғын</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2a4a3c 0%, #16382a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px 15px;
+        }
+
+        .passport {
+            max-width: 1300px;
+            width: 100%;
+            background: #fef7e8;
+            border-radius: 36px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+            border: 2px solid #b48c48;
+        }
+
+        /* ШАПКА С ГЕРБОМ */
+        .passport-header {
+            background: linear-gradient(135deg, #1e4a3a 0%, #0f3528 100%);
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #f5e2b2;
+            border-bottom: 5px solid #d9a13b;
+        }
+
+        .emblem {
+            font-size: 3rem;
+            background: rgba(255,215,140,0.2);
+            padding: 12px;
+            border-radius: 60%;
+        }
+
+        .header-text h1 {
+            font-weight: 800;
+            font-size: 1.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ffde9c;
+            text-shadow: 2px 2px 0 #1a4a38;
+        }
+
+        .header-text p {
+            color: #f5e2b2;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .passport-body {
+            padding: 25px 30px;
+            background: #fef7e8;
+        }
+
+        /* РЕЖИМ РЕДАКТИРОВАНИЯ */
+        .edit-mode [contenteditable="true"] {
+            border-bottom: 2px dashed #b48c48;
+            outline: none;
+            background-color: #fffaf0;
+            cursor: text;
+            padding: 2px 6px;
+            transition: 0.1s;
+            border-radius: 8px;
+        }
+        .edit-mode [contenteditable="true"]:hover {
+            background-color: #fff0dc;
+        }
+        .edit-mode [contenteditable="true"]:focus {
+            background-color: #ffffff;
+            border-bottom: 3px solid #1e4a3a;
+        }
+        [contenteditable="true"] {
+            border-bottom: 2px solid transparent;
+            cursor: default;
+            min-height: 1.3em;
+        }
+        /* подсказка для пустых полей */
+        .info-value:empty::before,
+        .data-value:empty::before,
+        td:empty::before {
+            content: "✎ ______";
+            color: #b69b6e;
+            font-style: italic;
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+
+        /* КАРТОЧКИ СЕКЦИЙ */
+        .section-card {
+            background: white;
+            border-radius: 24px;
+            padding: 18px 24px;
+            margin-bottom: 26px;
+            box-shadow: 0 6px 0 #b48c48;
+            border: 1px solid #e5cfae;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e5a46;
+            border-left: 10px solid #d9a13b;
+            padding-left: 18px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #f9efdf, transparent);
+        }
+
+        /* ТАБЛИЦЫ */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            padding: 11px 10px;
+            border-bottom: 1px solid #ecdbba;
+            vertical-align: top;
+        }
+        .info-table td:first-child {
+            width: 280px;
+            font-weight: 700;
+            color: #3f543a;
+            background: #faf2e4;
+            border-right: 1px solid #e2cfb0;
+        }
+        .info-table td:last-child {
+            color: #1d3d33;
+            font-weight: 500;
+            padding-left: 20px;
+        }
+
+        /* ГРИД для доп. данных */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+        .data-block {
+            background: #fcf5ea;
+            padding: 12px 18px;
+            border-radius: 20px;
+            border-left: 6px solid #b48c48;
+        }
+        .data-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #8a6d46;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .data-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1a4a38;
+            word-break: break-word;
+        }
+
+        /* ФОТО СЕКЦИЯ */
+        .photo-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+            background: #ede0cf;
+            padding: 20px;
+            border-radius: 28px;
+            align-items: center;
+        }
+        .photo-frame {
+            flex: 0 0 210px;
+            height: 230px;
+            background: #cbbfaa;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 4px solid #b48c48;
+            box-shadow: 0 7px 0 #7a5c3a;
+            position: relative;
+            cursor: pointer;
+        }
+        .edit-mode .photo-frame {
+            cursor: pointer;
+        }
+        #animal-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #c7b698, #e1cfb0);
+            color: #5a4630;
+            font-size: 3.2rem;
+            text-align: center;
+        }
+        .photo-hint {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.75);
+            color: #ffdfa5;
+            text-align: center;
+            padding: 6px;
+            font-size: 0.8rem;
+            transform: translateY(100%);
+            transition: transform 0.2s;
+        }
+        .edit-mode .photo-frame:hover .photo-hint {
+            transform: translateY(0);
+        }
+        .badge-afm {
+            flex: 1;
+            background: #1e4a3a;
+            color: #ffde9c;
+            padding: 16px 20px;
+            border-radius: 24px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        /* КНОПКИ */
+        .control-panel {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 0 #6e4f2e;
+            transition: 0.07s linear;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        .btn-edit {
+            background: #b48c48;
+            color: #221c10;
+        }
+        .btn-save {
+            background: #1e5a46;
+            color: #f9e6bf;
+        }
+        .btn-reset {
+            background: #ad9a7c;
+            color: #2c2b1f;
+        }
+        .mode-indicator {
+            background: #ded0bc;
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mode-indicator.edit {
+            background: #b48c48;
+            color: #2a2418;
+        }
+        .save-notification {
+            background: #2c7f64;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 60px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .save-notification.show {
+            opacity: 1;
+        }
+        #file-input {
+            display: none;
+        }
+        .footer-seal {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #e5d3bc;
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        hr {
+            border-color: #d9b574;
+        }
+        @media (max-width: 750px) {
+            .info-table td:first-child { width: 180px; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .section-title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="passport" id="passport">
+    <div class="passport-header">
+        <div class="emblem">🐕‍🦺⚡</div>
+        <div class="header-text">
+            <h1>ПАСПОРТ СЛУЖЕБНОЙ СОБАКИ</h1>
+            <p>Агентство по финансовому мониторингу РК · Кинологический центр</p>
+        </div>
+    </div>
+
+    <div class="passport-body">
+        <!-- Панель управления -->
+        <div class="control-panel">
+            <div class="mode-indicator view" id="modeIndicator">
+                <span id="modeIcon">👁️</span>
+                <span id="modeText">Просмотр</span>
+            </div>
+            <button class="btn btn-edit" id="editBtn" onclick="enableEditMode()">✏️ РЕДАКТИРОВАТЬ</button>
+            <button class="btn btn-save" id="saveBtn" onclick="saveAndLock()" disabled>💾 СОХРАНИТЬ</button>
+            <button class="btn btn-reset" onclick="resetToDefault()">🔄 СБРОСИТЬ ВСЁ</button>
+            <span class="save-notification" id="saveNotification">✓ Сохранено</span>
+        </div>
+
+        <!-- ФОТО -->
+        <div class="photo-section">
+            <div class="photo-frame" id="photoFrame" onclick="handlePhotoClick()">
+                <img id="animal-photo" src="" alt="Фото Тұйғын">
+                <div class="photo-placeholder" id="photo-placeholder">
+                    🐕‍🦺
+                    <span style="font-size: 0.8rem;">Тұйғын</span>
+                </div>
+                <div class="photo-hint" id="photoHint">📸 Загрузить фото (режим ред.)</div>
+            </div>
+            <input type="file" id="file-input" accept="image/*" onchange="loadPhoto(event)">
+            <div class="badge-afm">
+                ⚡ АФМ РК | СЛУЖЕБНАЯ СОБАКА<br>
+                Кастомс Нарсери Тұйғын
+            </div>
+        </div>
+
+        <!-- 1. ОСНОВНЫЕ СВЕДЕНИЯ -->
+        <div class="section-card">
+            <div class="section-title">1. ОСНОВНЫЕ СВЕДЕНИЯ О СОБАКЕ</div>
+            <table class="info-table">
+                <tr><td>Регистрационный номер</td><td id="reg-number">238307000168</td></tr>
+                <tr><td>Чип (номер микрочипа)</td><td id="chip-number">398153610180155</td></tr>
+                <tr><td>Кличка собаки</td><td id="dog-name">«Кастомс Нарсери Тұйғын»</td></tr>
+                <tr><td>Порода</td><td id="breed">бельгийская овчарка (малинуа)</td></tr>
+                <tr><td>Пол</td><td id="gender">сука</td></tr>
+                <tr><td>Дата рождения</td><td id="birth-date">19.10.2018г.</td></tr>
+                <tr><td>Возраст</td><td id="age">7,5 лет</td></tr>
+                <tr><td>Окрас</td><td id="color">рыжий с углем</td></tr>
+                <tr><td>Место происхождения</td><td id="origin">Кинологический центр АФМ РК г.Алматы</td></tr>
+                <tr><td>Дата поступления на службу</td><td id="service-start">2020 год</td></tr>
+            </table>
+        </div>
+
+        <!-- 2. БИОЛОГИЧЕСКИЕ И ВЕТЕРИНАРНЫЕ ДАННЫЕ -->
+        <div class="section-card">
+            <div class="section-title">2. БИОЛОГИЧЕСКИЕ И ВЕТЕРИНАРНЫЕ ДАННЫЕ</div>
+            <table class="info-table">
+                <tr><td>Вес</td><td id="weight">31кг</td></tr>
+                <tr><td>Рост</td><td id="height">45 см</td></tr>
+                <tr><td>Группа крови / резус фактор</td><td id="blood-type">Не имеется</td></tr>
+                <tr><td>Тип ВНД (высшей нервной деятельности)</td><td id="nervous-type">Сангвиничный-флегматик</td></tr>
+                <tr><td>Зрение</td><td id="vision">в пределах нормы</td></tr>
+                <tr><td>Слух</td><td id="hearing">в пределах нормы</td></tr>
+                <tr><td>Обоняние</td><td id="smell">в пределах нормы</td></tr>
+                <tr><td>Недостатки и пороки по стандарту породы</td><td id="defects">нет</td></tr>
+                <tr><td>Наличие хронических заболеваний</td><td id="chronic">нет</td></tr>
+                <tr><td>Аллергии</td><td id="allergies">нет</td></tr>
+                <tr><td>Нежелательные связи и реакции поведения</td><td id="behavior">нет</td></tr>
+                <tr><td>Номер ветеринарного паспорта</td><td id="vet-passport">16008158</td></tr>
+                <tr><td>Заключение КЦ АФМ РК о пригодности к службе</td><td id="conclusion">Пригодна к поисковой службе</td></tr>
+                <tr><td>Рекомендуемый метод дрессировки</td><td id="training-method">Игровой</td></tr>
+            </table>
+        </div>
+
+        <!-- 3. ПОДГОТОВКА И СПЕЦИАЛИЗАЦИЯ -->
+        <div class="section-card">
+            <div class="section-title">3. ПОДГОТОВКА И СПЕЦИАЛИЗАЦИЯ</div>
+            <table class="info-table">
+                <tr><td>Направление подготовки</td><td id="specialization">поисковая служба</td></tr>
+                <tr><td>На что обучена</td><td id="trained-for">поиск наркотических средств</td></tr>
+                <tr><td>Дата начала обучения</td><td id="training-start">05.10.2025</td></tr>
+                <tr><td>Дата завершения обучения</td><td id="training-end">06.11.2026</td></tr>
+                <tr><td>Учебный центр</td><td id="training-center">Кинологический центр АФМ РК</td></tr>
+                <tr><td>Уровень подготовки</td><td id="training-level">Первоначальная подготовка 3-месячный курс по поиску наркотических средств; повышение квалификации месячный курс по поиску синтетических наркотических средств</td></tr>
+                <tr><td>Сертификаты</td><td id="certificates">№ 00899, 2025г</td></tr>
+            </table>
+        </div>
+
+        <!-- 4. КИНОЛОГ -->
+        <div class="section-card">
+            <div class="section-title">4. КИНОЛОГ</div>
+            <table class="info-table">
+                <tr><td>ФИО кинолога</td><td id="handler-name">Сариев Ержигит Елбасыевич</td></tr>
+                <tr><td>Должность</td><td id="handler-position">старший оперуполномоченный кинологического отдела ДЭР по Туркестанской области</td></tr>
+                <tr><td>Звание</td><td id="handler-rank">Майор СЭР</td></tr>
+                <tr><td>Контакт</td><td id="handler-contact"></td></tr>
+                <tr><td>Дата закрепления за собакой</td><td id="handler-assign-date">2023 год</td></tr>
+            </table>
+        </div>
+
+        <!-- 5. СЛУЖЕБНАЯ ДЕЯТЕЛЬНОСТЬ -->
+        <div class="section-card">
+            <div class="section-title">5. СЛУЖЕБНАЯ ДЕЯТЕЛЬНОСТЬ</div>
+            <table class="info-table">
+                <tr><td>Количество результативных обнаружений по контрабанде</td><td id="detections">11 фактов</td></tr>
+                <tr><td>Участие в операциях с правоохранительными органами</td><td id="operations">15 фактов</td></tr>
+                <tr><td>Раскрытые преступления (результативность)</td><td id="crimes-solved">26 фактов</td></tr>
+                <tr><td>Награды</td><td id="awards">нет</td></tr>
+                <tr><td>Дисциплинарные отметки</td><td id="disciplinary">нет</td></tr>
+            </table>
+        </div>
+
+        <!-- 6. МЕДИЦИНСКИЙ КОНТРОЛЬ -->
+        <div class="section-card">
+            <div class="section-title">6. МЕДИЦИНСКИЙ КОНТРОЛЬ</div>
+            <table class="info-table">
+                <tr><td>Дата вакцинации</td><td id="vaccination-date">Март 2025г</td></tr>
+                <tr><td>Тип вакцины</td><td id="vaccine-type">Нобивак «Lepto» серия: А716А01 срок годности до 04.2025г., Нобивак «Rabies» серия: А595А01 срок годности до 03.2026г., Нобивак «DHPPI» серия: А74901 срок годности до 08.2025г.</td></tr>
+                <tr><td>Обработка от паразитов</td><td id="parasite-treatment">Декабрь 2025г</td></tr>
+                <tr><td>Осмотр ветеринара</td><td id="vet-exam">Еженедельно</td></tr>
+                <tr><td>Травмы</td><td id="injuries">незначительные</td></tr>
+                <tr><td>Лечение</td><td id="treatment">амбулаторно</td></tr>
+            </table>
+        </div>
+
+        <!-- 7. ТРЕНИРОВКИ -->
+        <div class="section-card">
+            <div class="section-title">7. ТРЕНИРОВКИ</div>
+            <table class="info-table">
+                <tr><td>Дата тренировки</td><td id="training-date">07-08 марта 2026г</td></tr>
+                <tr><td>Вид тренировки</td><td id="training-type">Поиск НС в помещении и на автотранспорте</td></tr>
+                <tr><td>Результат</td><td id="training-result">хорошо</td></tr>
+                <tr><td>Оценка</td><td id="training-grade">хорошо</td></tr>
+            </table>
+        </div>
+
+        <!-- 8. ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ -->
+        <div class="section-card">
+            <div class="section-title">8. ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ</div>
+            <div class="grid-2">
+                <div class="data-block"><div class="data-label">Особенности характера</div><div class="data-value" id="character">активная</div></div>
+                <div class="data-block"><div class="data-label">Любимая игрушка / мотивация</div><div class="data-value" id="favorite-toy">резиновый мяч</div></div>
+                <div class="data-block"><div class="data-label">Уровень агрессии</div><div class="data-value" id="aggression-level">уравновешенная</div></div>
+                <div class="data-block"><div class="data-label">Реакция на выстрел</div><div class="data-value" id="shot-reaction">боязливая</div></div>
+                <div class="data-block"><div class="data-label">Работоспособность</div><div class="data-value" id="performance">активная</div></div>
+                <div class="data-block"><div class="data-label">Рацион питания</div><div class="data-value" id="diet">Сухой корм по рациону</div></div>
+                <div class="data-block"><div class="data-label">График работы и отдых</div><div class="data-value" id="schedule"></div></div>
+                <div class="data-block"><div class="data-label">Родословная</div><div class="data-value" id="pedigree">имеется</div></div>
+                <div class="data-block"><div class="data-label">Дата списания со службы</div><div class="data-value" id="retirement-date">2027г.</div></div>
+            </div>
+        </div>
+
+        <div class="footer-seal">
+            <div>📅 Дата заполнения: _______________</div>
+            <div>🐾 Подпись кинолога: _______________</div>
+            <div>🖊️ М.П.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Все редактируемые поля (точно по данным из вашей таблицы)
+    const editableFields = [
+        'reg-number', 'chip-number', 'dog-name', 'breed', 'gender', 'birth-date', 'age', 'color', 'origin', 'service-start',
+        'weight', 'height', 'blood-type', 'nervous-type', 'vision', 'hearing', 'smell', 'defects', 'chronic', 'allergies',
+        'behavior', 'vet-passport', 'conclusion', 'training-method', 'specialization', 'trained-for', 'training-start',
+        'training-end', 'training-center', 'training-level', 'certificates', 'handler-name', 'handler-position', 'handler-rank',
+        'handler-contact', 'handler-assign-date', 'detections', 'operations', 'crimes-solved', 'awards', 'disciplinary',
+        'vaccination-date', 'vaccine-type', 'parasite-treatment', 'vet-exam', 'injuries', 'treatment', 'training-date',
+        'training-type', 'training-result', 'training-grade', 'character', 'favorite-toy', 'aggression-level', 'shot-reaction',
+        'performance', 'diet', 'schedule', 'pedigree', 'retirement-date'
+    ];
+
+    function enableEditMode() {
+        document.getElementById('passport').classList.add('edit-mode');
+        editableFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.setAttribute('contenteditable', 'true');
+        });
+        document.getElementById('modeIndicator').className = 'mode-indicator edit';
+        document.getElementById('modeIcon').innerHTML = '✏️';
+        document.getElementById('modeText').innerHTML = 'Редактирование';
+        document.getElementById('editBtn').disabled = true;
+        document.getElementById('saveBtn').disabled = false;
+        document.getElementById('photoHint').innerHTML = '📸 Кликни для загрузки фото';
+    }
+
+    function disableEditMode() {
+        document.getElementById('passport').classList.remove('edit-mode');
+        editableFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.removeAttribute('contenteditable');
+        });
+        document.getElementById('modeIndicator').className = 'mode-indicator view';
+        document.getElementById('modeIcon').innerHTML = '👁️';
+        document.getElementById('modeText').innerHTML = 'Просмотр';
+        document.getElementById('editBtn').disabled = false;
+        document.getElementById('saveBtn').disabled = true;
+        document.getElementById('photoHint').innerHTML = '📸 Включи режим редактирования';
+    }
+
+    function saveAndLock() {
+        saveAllChanges();
+        disableEditMode();
+    }
+
+    function saveAllChanges() {
+        const data = {};
+        editableFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) data[id] = el.innerHTML;
+        });
+        localStorage.setItem('tuigynDogPassport', JSON.stringify(data));
+
+        const photo = document.getElementById('animal-photo');
+        if (photo.src && !photo.src.includes('blob:') && photo.src !== '') {
+            localStorage.setItem('tuigynDogPhoto', photo.src);
+        } else if (photo.src && photo.src.startsWith('blob:')) {
+            // для blob можно сохранить через canvas, но на практике фото и так остаётся, если оно выбрано
+            localStorage.setItem('tuigynDogPhoto', photo.src);
+        }
+
+        const notify = document.getElementById('saveNotification');
+        notify.classList.add('show');
+        setTimeout(() => notify.classList.remove('show'), 2000);
+    }
+
+    function loadSavedData() {
+        const saved = localStorage.getItem('tuigynDogPassport');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = data[id];
+                });
+            } catch(e) { console.warn(e); }
+        }
+        const savedPhoto = localStorage.getItem('tuigynDogPhoto');
+        if (savedPhoto && savedPhoto !== 'undefined' && savedPhoto !== '') {
+            const img = document.getElementById('animal-photo');
+            const placeholder = document.getElementById('photo-placeholder');
+            img.src = savedPhoto;
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+    }
+
+    function handlePhotoClick() {
+        if (document.getElementById('passport').classList.contains('edit-mode')) {
+            document.getElementById('file-input').click();
+        } else {
+            alert('Сначала включите режим редактирования (кнопка "РЕДАКТИРОВАТЬ")');
+        }
+    }
+
+    function loadPhoto(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('animal-photo');
+                const placeholder = document.getElementById('photo-placeholder');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                // автосохранение фото не делаем, пользователь сохранит сам
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function resetToDefault() {
+        if (confirm('ВНИМАНИЕ! Все ваши изменения будут удалены, вернутся исходные данные из паспорта. Продолжить?')) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSavedData();
+        disableEditMode(); // начальный режим — только просмотр
+    });
+</script>
+</body>
+</html>
